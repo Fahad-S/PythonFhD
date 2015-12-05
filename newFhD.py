@@ -1,5 +1,4 @@
 __author__ = 'MacUser'
-__author__ = 'MacUser'
 
 #!/usr/bin/python
 
