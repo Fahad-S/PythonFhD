@@ -44,8 +44,9 @@ for c in range(0, len(file_names)):
             data = chro_indata[line].split('\t')
             next_data = chro_indata[line+1].split('\t')
             strand = data[10]
-            # save unique genes with their start, end ,strand, and name
+            # save unique genes with their start, end ,strand, and gene name
             # no need for the multiple Exon for same gene in this file.
+            # key is the gene ensemble ID
             if data[1].strip() not in gene_dict.keys():
                 gene_dict[data[1].strip()] = str(str(data[3].strip()) + ' ' + str(data[4].strip()) + ' ' + str(data[10].strip()) + ' ' + str(data[0].strip()))
 
@@ -153,12 +154,12 @@ for c in range(0, len(file_names)):
                             break
                         #end of Extra
 
-                        p_group = 3
-                        p_cluster = 3
+                        p_group = 4
+                        p_cluster = 2
                         break
                 if mismatch <= 1:
-                    p_group = 4
-                    p_cluster = 2
+                    p_group = 3
+                    p_cluster = 3
             else:
                 #Extra checking other cluster types
                 mismatch=0
