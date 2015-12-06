@@ -97,6 +97,7 @@ for c in range(0, len(file_names)):
     pattern_line = dict() # Dictionary to link the pattern id with the pattern details
 
     counter =0
+    larger=0
     for line in extra_indata:
         pattern_info = line.split(' ')
 
@@ -182,26 +183,27 @@ for c in range(0, len(file_names)):
 
 
         # Calculate the exact location of the pattern in the gene
+        # we still reading the pattern file lines(extra_indata) and pattern_info = line
 
         gene_loc = gene_dict[pattern_info[0].strip()]
         gene_location = gene_loc.split(' ')
         g_start = int(gene_location[0])
         g_end = int(gene_location[1])
-        strand = int(gene_location[2])
-        gene_name = str(gene_location[3])
+        g_strand = int(gene_location[2])
+        g_name = str(gene_location[3])
 
 
         p_start = int(pattern_info[1]) - 15
         exact_location = 0
-        if strand == 1:
+        if g_strand == 1:
             exact_location = int(g_start) + int(p_start)
-        elif strand == -1:
+        elif g_strand == -1:
             exact_location = int(g_end) - int(p_start)
 
 
         # Write the analyzed information in the output file
 
-        extra_outfile.write(str(pattern_info[0]).strip() + '\t' + str(p_start).strip() + '\t' + str(pattern_info[2]).strip() + '\t' + str(pattern_info[3]).strip() + '\t' + str(g_start).strip() + '\t' + str(g_end).strip() + '\t' + str(strand) + '\t' + str(exact_location).strip() + '\t' + str(p_group) + '\t' + str(p_cluster) + '\t'+ str(chr_num) + '\t' + gene_name +'\n')
+        extra_outfile.write(str(pattern_info[0]).strip() + '\t' + str(p_start).strip() + '\t' + str(pattern_info[2]).strip() + '\t' + str(pattern_info[3]).strip() + '\t' + str(g_start).strip() + '\t' + str(g_end).strip() + '\t' + str(g_strand) + '\t' + str(exact_location).strip() + '\t' + str(p_group) + '\t' + str(p_cluster) + '\t'+ str(chr_num) + '\t' + g_name +'\n')
 
 
 #               # Update the dictionaries to be used in step 3
@@ -225,6 +227,8 @@ for c in range(0, len(file_names)):
      #                   gene_pattern[pattern_info[0].strip()].append(exact_location)
             elif len(old_p[2].strip()) == len(pattern_seq):
                  gene_pattern[pattern_info[0].strip()].append(exact_location)
+            else:
+                larger+=1
         else:
                # print(pattern_info[0])
                # print(pattern_seq)
@@ -330,6 +334,8 @@ for c in range(0, len(file_names)):
     introns_data.close()
 
     print ('The analysis of chromosome ' + str(chr_num) + ' is done')
+    # print(str(larger))
+    # print(str(len(pattern_line)))
 
 
 
