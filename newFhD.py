@@ -5,7 +5,7 @@ __author__ = 'MacUser'
 import sys
 
 file_names = []
-file_names.append("chrx_Full_table_tab_gene.txt newtable_final.txt chrx\ ")
+file_names.append("chr1_Full_table_tab_gene.txt newtable_final.txt chrx\ ")
 
 
 # For each chromosome
