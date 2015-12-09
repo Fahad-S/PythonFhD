@@ -9,8 +9,10 @@ import os
 
 
 # For each chromosome
-rootdir= '/Users/MacUser/Desktop/KFSHRC/Help/Allfiles/'
-for subdir, dirs, files in os.walk(rootdir):
+rootdir=os.getcwd() # 'D:/Bioinformatics/Dr. Tala'# os.getcwd()
+#rootdir = rootdir.replace('\\','/')
+rootdir = os.path.realpath(rootdir)
+for subdir, dirs, files in os.walk(rootdir + '/InputFiles/'):
 # for files in os.walk(rootdir):
     skip_second_reading='false'
     for file in files:
@@ -29,13 +31,13 @@ for subdir, dirs, files in os.walk(rootdir):
         # file_name = file_names[c].split(' ')
         name1 = files[0].replace('.txt','')
         name2 = files[1].replace('.txt','')
-        directory = '/Users/MacUser/Desktop/KFSHRC/Help/OutPut/'
+        directory = rootdir+ '/OutPut/'
         chromosome = subdir.split('/')[len(subdir.split('/'))-1]
 
         # get chromosome number from file name
 
         chr_file_name = name1 #str(name1[0])
-        chr_num = chromosome[2]#chr_file_name[chr_file_name.find("r")+1:chr_file_name.find("_")]
+        chr_num = chromosome[3]#chr_file_name[chr_file_name.find("r")+1:chr_file_name.find("_")]
 
 
         ######################################### Step 1 #########################################
@@ -47,7 +49,7 @@ for subdir, dirs, files in os.walk(rootdir):
 
         chro_infile = open(subdir+'/'+files[0], 'r')
 
-        ''' external sort need '''
+        ''' external sort start '''
 
         header= chro_infile.readline()
         chro_indataUnsorted1 = chro_infile.readlines()
@@ -87,7 +89,7 @@ for subdir, dirs, files in os.walk(rootdir):
 
                 data = chro_indata[line].split('\t')
                 next_data = chro_indata[line+1].split('\t')
-                strand = data[10]
+                strand = data[10].strip()
                 # save unique genes with their start, end ,strand, and gene name
                 # no need for the multiple Exon for same gene in this file.
                 # key is the gene ensemble ID
@@ -130,7 +132,7 @@ for subdir, dirs, files in os.walk(rootdir):
         ############ Adding Exact gene location and patterns group to the second file ############
 
 
-        extra_outfile = open(directory + 'chr'+chromosome[2]+'_' +name2+'_Analyzed.txt', 'w')
+        extra_outfile = open(directory +chromosome+'_' +name2+'_Analyzed.txt', 'w')
         extra_outfile.write('Ensemble Gene ID\tPattern Start (bp)\tPattern End (bp)\tPattern\tGene Start (bp)\tGene End (bp)\tStrand\tExact Pattern Location\tGroup\tCluster\tChromosome number\tGene Name\n')
 
         extra_infile = open(subdir+'/'+files[1], 'r')
@@ -143,7 +145,7 @@ for subdir, dirs, files in os.walk(rootdir):
         counter =0
         larger=0
         for line in extra_indata:
-            pattern_info = line.split(' ')
+            pattern_info = line.split()
 
 
             # Find the pattern group and cluster
@@ -171,7 +173,9 @@ for subdir, dirs, files in os.walk(rootdir):
                             if pattern_seq[4:10] != 'ATTTAT':
                                 # erro no cluster for this belong to  1, 2 ,3
                                 counter+=1
-                                print('error:'+str(counter) +' Lenght:13 [index 5]= A and not in cluster 1 A. SubSeq:' +str(pattern_seq[4:9]) +'Seq:' + pattern_seq + ' match:'+ match +'\n' )
+                                print('error:'+str(counter) +' Lenght:13 [index 5]= A and not in cluster 1 A. SubSeq:' +str(pattern_seq[4:9]) +' Seq:' + pattern_seq + ' match:'+ match +'\n' )
+                                p_group = 0
+                                p_cluster = 0
                                 break
                             #end of Extra
 
@@ -195,7 +199,9 @@ for subdir, dirs, files in os.walk(rootdir):
 
                                 # erro no cluster for this belong to  1, 2 ,3
                                 counter+=1
-                                print('error:'+str(counter) +' Lenght:13 [index 5]= T and not in cluster 2 T. SubSeq:' +str(pattern_seq[3:10]) +'Seq:' + pattern_seq + ' match:'+ match +'\n' )
+                                print('error:'+str(counter) +' Lenght:13 [index 5]= T and not in cluster 2 T. SubSeq:' +str(pattern_seq[3:10]) +' Seq:' + pattern_seq + ' match:'+ match +'\n' )
+                                p_group = 0
+                                p_cluster = 0
                                 break
                             #end of Extra
 
@@ -218,6 +224,8 @@ for subdir, dirs, files in os.walk(rootdir):
                             # erro no cluster for this belong to  1, 2 ,3
                             counter+=1
                             print('error:'+str(counter) +' Lenght= 13 and not A/T and not in cluster 3. seq:' + pattern_seq + ' match:'+ match +'\n' )
+                            p_group = 0
+                            p_cluster = 0
                             break
 
                     #end of Extra
@@ -380,7 +388,6 @@ for subdir, dirs, files in os.walk(rootdir):
         print ('The analysis of chromosome ' + str(chr_num) + ' is done')
         # print(str(larger))
         # print(str(len(pattern_line)))
-
 
 
 
